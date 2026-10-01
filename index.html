@@ -4,10 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tetris</title>
+  <script>
+    // Aplica el tema guardado antes de pintar para evitar parpadeo (oscuro por defecto)
+    if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light';
+  </script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="wrapper">
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema">☀️ Claro</button>
     <h1 class="title" aria-label="TETRIS">
       <span style="color: #4dd0e1">T</span><span style="color: #ffd54f">E</span><span style="color: #ba68c8">T</span><span style="color: #81c784">R</span><span style="color: #e57373">I</span><span style="color: #ffb74d">S</span>
     </h1>
