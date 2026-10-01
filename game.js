@@ -169,7 +169,7 @@ function drawBlock(context, x, y, colorIndex, size, alpha) {
 }
 
 function drawGrid() {
-  ctx.strokeStyle = '#22222e';
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid').trim();
   ctx.lineWidth = 0.5;
   for (let c = 1; c < COLS; c++) {
     ctx.beginPath();
@@ -300,5 +300,25 @@ document.addEventListener('keydown', e => {
 });
 
 restartBtn.addEventListener('click', init);
+
+// ---- Tema claro/oscuro (oscuro por defecto) ----
+const themeBtn = document.getElementById('theme-toggle');
+
+function applyTheme(theme) {
+  const light = theme === 'light';
+  if (light) document.documentElement.dataset.theme = 'light';
+  else delete document.documentElement.dataset.theme;
+  themeBtn.textContent = light ? '🌙 Oscuro' : '☀️ Claro';
+  localStorage.setItem('theme', theme);
+  if (current) draw(); // redibuja el canvas (también en pausa)
+}
+
+themeBtn.addEventListener('click', () => {
+  const light = document.documentElement.dataset.theme === 'light';
+  applyTheme(light ? 'dark' : 'light');
+  themeBtn.blur(); // evita que Space/Enter reactiven el botón durante el juego
+});
+
+applyTheme(localStorage.getItem('theme') === 'light' ? 'light' : 'dark');
 
 init();
