@@ -8,6 +8,13 @@
     // Aplica el tema guardado antes de pintar para evitar parpadeo (oscuro por defecto)
     if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light';
   </script>
+  <script>
+    // Aplica la skin guardada antes de pintar (Neon fuerza fondo negro del canvas)
+    try {
+      const s = localStorage.getItem('skin');
+      if (s === 'neon') document.documentElement.dataset.skin = s;
+    } catch (e) { /* ignorar */ }
+  </script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -37,6 +44,11 @@
         <div class="panel-section">
           <span class="label">NEXT</span>
           <canvas id="next-canvas" width="120" height="120"></canvas>
+        </div>
+
+        <div class="panel-section skin-section">
+          <label class="label" for="skin-select">SKIN</label>
+          <select id="skin-select" class="skin-select"></select>
         </div>
 
         <div class="panel-section controls">
