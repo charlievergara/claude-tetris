@@ -219,3 +219,85 @@ kbd {
 #restart-btn:hover {
   background: var(--accent-hover);
 }
+
+/* ---- Tabla de records ---- */
+.records-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  width: 250px;
+}
+
+.records-box.hidden,
+.record-form.hidden {
+  display: none;
+}
+
+.record-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.record-form-row {
+  display: flex;
+  gap: 6px;
+}
+
+#record-name {
+  width: 130px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  user-select: text;
+}
+
+#record-save,
+#records-reset {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+#record-save:hover,
+#records-reset:hover {
+  border-color: var(--accent);
+}
+
+.records-list {
+  width: 100%;
+  padding-left: 22px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: left;
+}
+
+.records-list li {
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.records-list li span + span {
+  float: right;
+}
+
+.records-list li.current {
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+
+.records-stats {
+  font-size: 11px;
+  color: var(--muted);
+}
