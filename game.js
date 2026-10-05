@@ -108,7 +108,7 @@ function clearLines() {
   if (cleared) {
     lines += cleared;
     score += (LINE_SCORES[cleared] || 0) * level;
-    level = Math.floor(lines / 10) + 1;
+    level = startLevel + Math.floor(lines / 10); // parte del nivel inicial elegido
     dropInterval = Math.max(100, 1000 - (level - 1) * 90);
     updateHUD();
   }
@@ -232,13 +232,13 @@ function togglePause() {
   if (gameOver) return;
   paused = !paused;
   if (!paused) {
+    hidePauseMenu();
+    dropAccum = 0;
     lastTime = performance.now();
     loop(lastTime);
   } else {
     cancelAnimationFrame(animId);
-    overlayTitle.textContent = 'PAUSA';
-    overlayScore.textContent = '';
-    overlay.classList.remove('hidden');
+    showPauseMenu();
   }
 }
 
@@ -263,22 +263,24 @@ function init() {
   board = createBoard();
   score = 0;
   lines = 0;
-  level = 1;
+  level = startLevel;
   paused = false;
   gameOver = false;
-  dropInterval = 1000;
+  dropInterval = Math.max(100, 1000 - (level - 1) * 90);
   dropAccum = 0;
   lastTime = performance.now();
   next = randomPiece();
   spawn();
   updateHUD();
   overlay.classList.add('hidden');
+  hidePauseMenu();
   cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
 }
 
 document.addEventListener('keydown', e => {
-  if (e.code === 'KeyP') { togglePause(); return; }
+  if (e.code === 'Escape' && e.target === startLevelSel) return; // Esc cierra el desplegable
+  if (e.code === 'KeyP' || e.code === 'Escape') { togglePause(); return; }
   if (paused || gameOver) return;
   switch (e.code) {
     case 'ArrowLeft':
@@ -303,6 +305,40 @@ document.addEventListener('keydown', e => {
 });
 
 restartBtn.addEventListener('click', init);
+
+// ---- Menú de pausa ----
+// startLevel debe existir antes de la primera llamada a init()
+let startLevel = 1; // nivel con el que empieza la próxima partida (1–10)
+
+const pauseMenu = document.getElementById('pause-menu');
+const pauseControls = document.getElementById('pause-controls');
+const startLevelSel = document.getElementById('start-level');
+
+function showPauseMenu() {
+  pauseControls.classList.add('hidden');
+  pauseMenu.classList.remove('hidden');
+}
+
+function hidePauseMenu() {
+  pauseMenu.classList.add('hidden');
+}
+
+for (let l = 1; l <= 10; l++) startLevelSel.add(new Option(l, l));
+startLevelSel.value = startLevel;
+
+startLevelSel.addEventListener('change', () => {
+  startLevel = Number(startLevelSel.value);
+  startLevelSel.blur();
+});
+
+pauseMenu.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  btn.blur(); // evita que Space/Enter reactiven el botón
+  if (btn.id === 'resume-btn') togglePause();
+  else if (btn.id === 'menu-restart-btn') init();
+  else if (btn.id === 'controls-btn') pauseControls.classList.toggle('hidden');
+});
 
 // ---- Tema claro/oscuro (oscuro por defecto) ----
 const themeBtn = document.getElementById('theme-toggle');
